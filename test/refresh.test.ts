@@ -10,12 +10,20 @@ import { pricingPageURL } from "../src/domain.ts";
 /// produced a recorded failure with no snapshot, because `redirect: "error"` is
 /// rejected by workerd outright while Bun accepts it. Asserting the option
 /// directly is the check that would have caught it.
-function recordingFetcher(): { calls: RequestInit[]; fetch: (url: string, init?: RequestInit) => Promise<Response> } {
-  const calls: RequestInit[] = [];
+interface RecordedRequest {
+  readonly url: string;
+  readonly init: RequestInit | undefined;
+}
+
+function recordingFetcher(): {
+  calls: RecordedRequest[];
+  fetch: (url: string, init?: RequestInit) => Promise<Response>;
+} {
+  const calls: RecordedRequest[] = [];
   return {
     calls,
-    fetch: async (url: string, init?: RequestInit) => {
-      calls.push({ ...init, url } as RequestInit & { url: string });
+    fetch: async (url, init) => {
+      calls.push({ url, init });
       return new Response("<!doctype html><title>stub</title>", { status: 200 });
     },
   };
@@ -61,7 +69,7 @@ test("never asks the runtime to follow or error on redirects", async () => {
   // `"error"` is not a legal value for the Workers runtime, and `"follow"` would
   // let a moved page change what is parsed without review. `"manual"` is the
   // only value that is both accepted at the edge and safe.
-  expect(calls[0]?.redirect).toBe("manual");
+  expect(calls[0]?.init?.redirect).toBe("manual");
 });
 
 test("refuses a redirect instead of parsing whatever it points at", async () => {
