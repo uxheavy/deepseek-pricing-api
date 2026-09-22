@@ -1,4 +1,8 @@
-export const pricingPageURL = "https://api-docs.deepseek.com/quick_start/pricing";
+// The trailing slash is required: without it the site answers 302 to the
+// slashed path, and the refresh deliberately refuses redirects so a moved page
+// cannot silently change what is being parsed. The unslashed URL failed every
+// daily refresh with "did not return a successful response" until this changed.
+export const pricingPageURL = "https://api-docs.deepseek.com/quick_start/pricing/";
 export const holidayManifestURL =
   "https://raw.githubusercontent.com/NateScarlet/holiday-cn/18c8f140cd8574faf72c8bb5cd0a9bdf9d1c1b6c/2026.json";
 export const holidayNoticeURL =
