@@ -25,6 +25,13 @@ const RequestLimiter = Cloudflare.RateLimit("RequestLimiter", {
 });
 
 export const PricingScheduleWorker = Cloudflare.Worker("PricingScheduleWorker", {
+  // The deployed `workers.dev` address is derived from this name, and that
+  // derived URL is what the macOS client fetches. Leaving it unset makes
+  // Cloudflare's name a stage-scoped hash, which cannot be a stable client
+  // constant and would change the app's endpoint on every rename. The stack's
+  // `url` output below remains the source of truth for whichever address this
+  // resolves to; the client constant must be kept in step with it.
+  name: "deepseek-pricing-api",
   main: "./src/worker.ts",
   env: {
     DB: PricingDatabase,
