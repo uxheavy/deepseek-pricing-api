@@ -12,7 +12,12 @@ export const PricingDatabase = Cloudflare.D1.Database("PricingDatabase", {
 });
 
 const RequestLimiter = Cloudflare.RateLimit("RequestLimiter", {
-  namespaceId: "pricing-schedule",
+  // Cloudflare requires a numeric `namespace_id` for a ratelimit binding. The
+  // local simulator accepts any string, so a name-like value here passes every
+  // local check and fails only at deploy with "binding REQUEST_LIMIT of type
+  // ratelimit must have valid namespace_id". The value is arbitrary but must be
+  // a positive integer, and changing it later starts a new counter namespace.
+  namespaceId: 10_041,
   simple: {
     limit: 5,
     period: 60,
