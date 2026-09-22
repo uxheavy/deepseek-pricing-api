@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "openapi:check": "redocly lint openapi/openapi.yaml",
     "test": "ALCHEMY_TEST_DEV=1 bun test",
-    "dev": "ALCHEMY_DEV=1 pnpm exec alchemy dev"
+    "dev": "ALCHEMY_DEV=1 pnpm exec alchemy dev",
+    "seed": "bun run tools/seed.ts"
   },
   "dependencies": {
     "canonicalize": "5.1.0"
