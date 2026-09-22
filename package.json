@@ -1,0 +1,31 @@
+{
+  "name": "@uxheavy/deepseek-pricing-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": ">=22",
+    "bun": ">=1.4.2"
+  },
+  "scripts": {
+    "check": "pnpm run typecheck && pnpm run openapi:check",
+    "typecheck": "tsc --noEmit",
+    "openapi:check": "redocly lint openapi/openapi.yaml",
+    "test": "ALCHEMY_TEST_DEV=1 bun test",
+    "dev": "ALCHEMY_DEV=1 pnpm exec alchemy dev"
+  },
+  "dependencies": {
+    "canonicalize": "5.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260921.1",
+    "@effect/platform-bun": "4.0.0-rc.117",
+    "@effect/platform-node": "4.0.0-rc.117",
+    "@redocly/cli": "2.53.3",
+    "alchemy": "2.0.0-beta.79",
+    "bun-types": "1.4.2",
+    "effect": "4.0.0-rc.117",
+    "typescript": "6.0.3"
+  }
+}
