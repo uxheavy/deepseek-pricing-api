@@ -14,10 +14,20 @@ async function fetchPricingPage(fetcher: PricingPageFetcher): Promise<{
   readonly html: string;
   readonly provenance: SourceProvenance;
 }> {
+  // `redirect: "error"` is not accepted by the Workers runtime: workerd throws
+  // "Invalid redirect value, must be one of follow or manual" before the request
+  // is even made, so every scheduled refresh failed. Bun accepts "error", which
+  // is why the local suite never caught it. `"manual"` is supported at the edge,
+  // and the redirect is then rejected explicitly below so a moved page still
+  // cannot silently change what is parsed.
   const response = await fetcher(pricingPageURL, {
     headers: { Accept: "text/html" },
-    redirect: "error",
+    redirect: "manual",
   });
+
+  if (response.status >= 300 && response.status < 400) {
+    throw new Error("The official pricing source redirected; its location is no longer reviewed.");
+  }
 
   if (!response.ok) {
     throw new Error("The official pricing source did not return a successful response.");
